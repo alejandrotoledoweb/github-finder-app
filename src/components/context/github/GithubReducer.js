@@ -1,6 +1,4 @@
-const initialState = {};
-
-const githubReducer = (state = initialState, { type, payload }) => {
+const githubReducer = (state, { type, payload }) => {
   switch (type) {
     case 'GET_USERS':
       return {
