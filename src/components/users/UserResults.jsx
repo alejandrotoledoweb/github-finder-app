@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Spinner from '../layout/Spinner';
+import UserItem from '../users/UserItem';
 
 function UserResults() {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,6 @@ function UserResults() {
     const response = await fetch(`https://api.github.com/users`);
 
     const data = await response.json();
-    console.log(data);
     setUsers(data);
     setLoading(false);
   };
@@ -21,7 +21,7 @@ function UserResults() {
     return (
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-4 ls:grid-cols-3 md:grid-cols-2">
         {users.map((user) => (
-          <h3 key={user.id}>{user.login}</h3>
+          <UserItem key={user.id} user={user} />
         ))}
       </div>
     );
