@@ -5,16 +5,19 @@ import Spinner from '../layout/Spinner';
 import { Link } from 'react-router-dom';
 import { FaUsers, FaUserFriends, FaCodepen, FaStore } from 'react-icons/fa';
 import RepoList from '../repos/RepoList';
-
+import { getUser, getUserRepos } from '../context/github/GithubActions';
 function User() {
-  const { getUser, user, repos, loading, getUserRepos } =
-    useContext(GithubContext);
+  const { user, repos, loading, dispatch } = useContext(GithubContext);
   const params = useParams();
   useEffect(() => {
-    getUser(params.login);
-    getUserRepos(params.login);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.login]);
+    const fetchData = async () => {
+      const user = await getUser(params.login);
+      dispatch({ type: 'GET_USER', payload: user });
+      const userRepos = await getUserRepos(params.login);
+      dispatch({ type: 'GET_REPOS', payload: userRepos });
+    };
+    fetchData();
+  }, [dispatch, params.login]);
 
   const {
     name,
