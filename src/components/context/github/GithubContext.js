@@ -67,11 +67,18 @@ export const GithubProvider = ({ children }) => {
 
   const getUserRepos = async (login) => {
     setLoading();
-    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
+    const params = new URLSearchParams({
+      sort: 'created',
+      per_page: 10,
     });
+    const response = await fetch(
+      `${GITHUB_URL}/users/${login}/repos?${params}`,
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+        },
+      },
+    );
 
     if (response.status === 404) {
       window.location = '/notfound';
@@ -92,6 +99,7 @@ export const GithubProvider = ({ children }) => {
       value={{
         users: state.users,
         user: state.user,
+        repos: state.repos,
         loading: state.loading,
         dispatch,
         searchUsers,

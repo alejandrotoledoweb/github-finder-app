@@ -4,12 +4,16 @@ import GithubContext from '../context/github/GithubContext';
 import Spinner from '../layout/Spinner';
 import { Link } from 'react-router-dom';
 import { FaUsers, FaUserFriends, FaCodepen, FaStore } from 'react-icons/fa';
+import RepoList from '../repos/RepoList';
 
 function User() {
-  const { getUser, user, loading } = useContext(GithubContext);
+  const { getUser, user, repos, loading, getUserRepos } =
+    useContext(GithubContext);
   const params = useParams();
   useEffect(() => {
     getUser(params.login);
+    getUserRepos(params.login);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.login]);
 
   const {
@@ -158,7 +162,7 @@ function User() {
           </div>
         </div>
 
-        {/* <RepoList repos={repos} /> */}
+        <RepoList repos={repos} />
       </div>
     </>
   );
