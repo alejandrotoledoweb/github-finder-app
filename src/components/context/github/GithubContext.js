@@ -3,6 +3,9 @@ import githubReducer from './GithubReducer';
 const GithubContext = createContext();
 
 export const GithubProvider = ({ children }) => {
+  const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+  const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
+
   const initialState = {
     users: [],
     user: {},
@@ -32,9 +35,11 @@ export const GithubProvider = ({ children }) => {
     const params = new URLSearchParams({
       q: text,
     });
-    const response = await fetch(
-      `https://api.github.com/search/users?${params}`,
-    );
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
 
     const { items } = await response.json();
     dispatch({ type: 'GET_USERS', payload: items });
@@ -42,7 +47,11 @@ export const GithubProvider = ({ children }) => {
 
   const getUser = async (login) => {
     setLoading();
-    const response = await fetch(`https://api.github.com/users/${login}`);
+    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+      },
+    });
 
     if (response.status === 404) {
       window.location = '/notfound';
